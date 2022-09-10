@@ -2,21 +2,21 @@ import axios from 'axios';
 
 const key = import.meta.env.VITE_YOUTUBE_API_KEY;
 
-const getPlaylistItems = async (playListId, pageToken = '', result = []) => {
-  const URL = `https://youtube.googleapis.com/youtube/v3/playlistItems?key=${key}&part=id,contentDetails,snippet,status&maxResults=50&playlistId=${playListId}&pageToken=${pageToken}`;
+const getPlaylistItems = async (playlistId, pageToken = '', result = []) => {
+  const URL = `https://youtube.googleapis.com/youtube/v3/playlistItems?key=${key}&part=id,contentDetails,snippet,status&maxResults=50&playlistId=${playlistId}&pageToken=${pageToken}`;
 
   const { data } = await axios.get(URL);
   result = [...result, ...data.items];
   if (data.nextPageToken) {
-    result = getPlaylistItems(playListId, data.nextPageToken, result);
+    result = getPlaylistItems(playlistId, data.nextPageToken, result);
   }
   return result;
 };
 
-const getPlaylist = async (playListId) => {
-  const URL = `https://youtube.googleapis.com/youtube/v3/playlists?part=snippet&id=${playListId}&key=${key}`;
+const getPlaylist = async (playlistId) => {
+  const URL = `https://youtube.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${key}`;
   const { data } = await axios.get(URL);
-  let playlistItems = await getPlaylistItems(playListId);
+  let playlistItems = await getPlaylistItems(playlistId);
 
   const {
     channelId,
@@ -45,7 +45,7 @@ const getPlaylist = async (playListId) => {
   return {
     channelId,
     channelTitle,
-    playListId,
+    playlistId,
     playlistTitle,
     playlistDescription,
     playlistThumbnail: thumbnails.default,
